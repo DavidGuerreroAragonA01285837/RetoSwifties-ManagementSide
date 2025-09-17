@@ -18,16 +18,20 @@ struct VentanillaCard: View {
             : Color(red: 153/255, green: 153/255, blue: 153/255) // #999999
 
         VStack(spacing: 6) {
-            Text("Ventanilla \(ventanilla.id)")
-                .font(.system(size: 34, weight: .bold))
-                .fontWeight(.bold).foregroundColor(.white)
-
+            
             if ventanilla.ocupada, let empleado = ventanilla.nombreEmpleado {
                 Text(empleado)
+                    .font(.system(size: 30, weight: .bold))
                     .font(.title).fontWeight(.semibold).foregroundColor(.white)
                     .lineLimit(1).minimumScaleFactor(0.8)
                 
             }
+            
+            Text("Ventanilla \(ventanilla.id)")
+                .font(.system(size: 25, weight: .bold))
+                .fontWeight(.bold).foregroundColor(.white)
+
+
         }
         .frame(maxWidth: .infinity, minHeight: 90)
         .padding(.vertical, 10)
