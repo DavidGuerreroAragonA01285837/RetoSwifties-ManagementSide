@@ -7,40 +7,59 @@
 
 import SwiftUI
 
+import SwiftUI
+
 struct VentanillaCard: View {
     var ventanilla: Ventanilla
     var enModoLiberar: Bool = false
     var onTap: (() -> Void)? = nil
 
     var body: some View {
+        // Colores (ocupada = azul #01688A, libre = gris #999999)
         let bgColor = ventanilla.ocupada
-            ? Color(red: 0/255, green: 104/255, blue: 138/255)   // #01688A
-            : Color(red: 153/255, green: 153/255, blue: 153/255) // #999999
+            ? Color(red: 0/255, green: 104/255, blue: 138/255)
+            : Color(red: 153/255, green: 153/255, blue: 153/255)
 
-        VStack(spacing: 6) {
-            
+        VStack(spacing: 10) {
             if ventanilla.ocupada, let empleado = ventanilla.nombreEmpleado {
+                // Nombre del empleado → más grande y bold
                 Text(empleado)
-                    .font(.system(size: 30, weight: .bold))
-                    .font(.title).fontWeight(.semibold).foregroundColor(.white)
-                    .lineLimit(1).minimumScaleFactor(0.8)
-                
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .multilineTextAlignment(.center)
+
+                // Ventanilla
+                Text("Ventanilla \(ventanilla.id)")
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundColor(.white.opacity(0.95))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .multilineTextAlignment(.center)
+
+            } else {
+                // Libre
+                Text("Libre")
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .multilineTextAlignment(.center)
+
+                Text("Ventanilla \(ventanilla.id)")
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundColor(.white.opacity(0.95))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .multilineTextAlignment(.center)
             }
-            
-            Text("Ventanilla \(ventanilla.id)")
-                .font(.system(size: 25, weight: .bold))
-                .fontWeight(.bold).foregroundColor(.white)
-
-
         }
-        .frame(maxWidth: .infinity, minHeight: 90)
-        .padding(.vertical, 10)
-        .background(RoundedRectangle(cornerRadius: 10).fill(bgColor))
-        .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(enModoLiberar ? Color.white.opacity(0.8) : .clear, lineWidth: 2)
-        )
-        .contentShape(Rectangle())
+        .frame(maxWidth: .infinity, minHeight: 140) // un poquito más alta
+        .padding(20)
+        .background(bgColor)
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         .onTapGesture { onTap?() }
     }
 }

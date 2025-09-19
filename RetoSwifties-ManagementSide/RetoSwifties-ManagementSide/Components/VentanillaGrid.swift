@@ -8,17 +8,15 @@
 import SwiftUI
 
 struct VentanillaGrid: View {
-    var ventanillas: [Ventanilla]
+    let ventanillas: [Ventanilla]
     var enModoLiberar: Bool = false
-    var onTapCard: (Ventanilla) -> Void = { _ in }
+    var onTapCard: (Ventanilla) -> Void
 
-    private let columns = [
-        GridItem(.flexible(), spacing: 16),
-        GridItem(.flexible(), spacing: 16)
-    ]
+    // Grid de 4 columnas
+    private let columnas = Array(repeating: GridItem(.flexible(), spacing: 12), count: 4)
 
     var body: some View {
-        LazyVGrid(columns: columns, spacing: 16) {
+        LazyVGrid(columns: columnas, spacing: 12) {
             ForEach(ventanillas) { v in
                 VentanillaCard(
                     ventanilla: v,
@@ -28,16 +26,18 @@ struct VentanillaGrid: View {
             }
         }
         .padding(.horizontal, 20)
-        .padding(.top, 12)
     }
 }
 
 #Preview {
-    VentanillaGrid(ventanillas: [
-        Ventanilla(id: 1, nombreEmpleado: "Andres Canavati", ocupada: true),
-        Ventanilla(id: 2, ocupada: false),
-        Ventanilla(id: 3, ocupada: false),
-        Ventanilla(id: 4, nombreEmpleado: "Elian Genc", ocupada: true)
-    ])
+    VentanillaGrid(
+        ventanillas: [
+            Ventanilla(id: 1, nombreEmpleado: "Andrés Canavati", ocupada: true),
+            Ventanilla(id: 2, ocupada: false),
+            Ventanilla(id: 3, ocupada: false),
+            Ventanilla(id: 4, nombreEmpleado: "Elian Genc", ocupada: true)
+        ],
+        onTapCard: { _ in }
+    )
+    .padding()
 }
-
