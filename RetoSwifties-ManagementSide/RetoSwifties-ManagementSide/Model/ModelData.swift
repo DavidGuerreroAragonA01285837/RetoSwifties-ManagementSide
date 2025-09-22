@@ -17,25 +17,25 @@ func obtenerEmpleados() -> Array<Empleado> {
         id: 1,
         nombre: "Emilio",
         apellido: "Barragan",
-        dias:[10,13,20,18,21,9,6]
+        semanas:[10,13,20,18,21,9,6]
       ),
       Empleado(
         id: 2,
         nombre: "Rodrigo",
         apellido: "Vela",
-        dias: [7,3,10,9,12,9,13]
+        semanas: [7,3,10,9,12,9,13]
       ),
       Empleado(
         id: 3,
         nombre: "Andres",
         apellido: "Canavati",
-        dias: [9,14,8,23,2,7,1]
+        semanas: [9,14,8,23,2,7,1]
       ),
       Empleado(
         id: 4,
         nombre: "Elian",
         apellido: "Genc",
-        dias: [20,3,3,16,23,11,5]
+        semanas: [20,3,3,16,23,11,5]
       ),
     ];
 

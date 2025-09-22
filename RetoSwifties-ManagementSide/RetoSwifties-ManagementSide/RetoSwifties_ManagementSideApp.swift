@@ -15,7 +15,7 @@ struct RetoSwifties_ManagementSideApp: App {
                 id: 1,
                 nombre: "Emilio",
                 apellido: "Barragan",
-                dias: [10,13,20,18,21,9,6]
+                semanas: [10,13,20,18,21,9,6]
               ))
         }
     }

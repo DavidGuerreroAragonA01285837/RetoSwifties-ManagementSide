@@ -11,18 +11,18 @@ struct Empleado: Identifiable, Hashable{
     var id : Int
     var nombre : String
     var apellido : String
-    var dias: [Int]
+    var semanas: [Int]
         
-    var total_atendidos: Int { dias.reduce(0, +) }
+    var total_atendidos: Int { semanas.reduce(0, +) }
     var avg: Float {
-        guard !dias.isEmpty else { return 0 }
-        return Float(total_atendidos) / Float(dias.count)
+        guard !semanas.isEmpty else { return 0 }
+        return Float(total_atendidos) / Float(semanas.count)
     }
     
-    init(id: Int, nombre: String, apellido: String,dias:Array<Int>){
+    init(id: Int, nombre: String, apellido: String,semanas:Array<Int>){
         self.id = id
         self.nombre = nombre
         self.apellido = apellido
-        self.dias = dias
+        self.semanas = semanas
     }
 }

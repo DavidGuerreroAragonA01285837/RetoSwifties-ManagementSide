@@ -16,6 +16,7 @@ struct TextoDashboard: View {
         Text("Dashboard")
             .font(.system(size: 50, weight: .bold))
             .padding(.top, 40)
+            .foregroundColor(Color(.sRGB, red: 102/255, green: 102/255, blue: 102/255))
 
         // Picker que actualiza el empleado seleccionado
         Picker("Empleado", selection: $empleado) {
@@ -26,7 +27,7 @@ struct TextoDashboard: View {
         .pickerStyle(.menu)
         .frame(width: 300, height: 60)
         .padding()
-        .background(Color.gray.opacity(0.3))
+        .background(Color(.sRGB, red: 211/255, green: 211/255, blue: 211/255))
         .cornerRadius(15)
         .font(.largeTitle)
 
@@ -52,7 +53,7 @@ struct TextoDashboard: View {
                     id: 1,
                     nombre: "Emilio",
                     apellido: "Barragan",
-                    dias: [10, 13, 20, 18, 21, 9, 6]
+                    semanas: [10, 13, 20, 18, 21, 9, 6]
                 )
             )
         )

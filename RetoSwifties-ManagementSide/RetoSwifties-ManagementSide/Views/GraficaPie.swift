@@ -13,38 +13,51 @@ struct GraficaPie: View {
     @Binding var empleado: Empleado // el seleccionado
     
     var body: some View {
-        VStack {
-            Text("Clientes atendidos por empleado")
-                .font(.title2)
+        VStack(alignment: .leading, spacing: 16) {
             
+            // Título
+            Text("Clientes atendidos por \(empleado.nombre)")
+                .font(.headline)
+                .foregroundColor(.primary)
+                .padding(.horizontal)
+            
+            // Gráfico circular
             Chart {
                 ForEach(empleados) { e in
                     SectorMark(
                         angle: .value("Total Atendidos", e.total_atendidos),
-                       // innerRadius: .ratio(0.5),
                         angularInset: 1
                     )
-                    .foregroundStyle(e.id == empleado.id ? Color.blue : Color.orange) // azul si es el seleccionado
-                   // .annotation(position: .overlay) {
-                     //   Text("\(e.nombre.prefix(1))") // inicial
-                       //     .font(.caption)
-                         //   .foregroundColor(.white)
-                    //}
+                    .foregroundStyle(
+                        e.id == empleado.id
+                        ? Color(red: 1/255, green: 104/255, blue: 138/255)   // azul
+                        : Color(red: 255/255, green: 153/255, blue: 0/255)  // naranja
+                    )
+                    .annotation(position: .overlay) {
+                    }
                 }
             }
-            .frame(height: 300)
+            .frame(height: 280)
+            .padding(.horizontal)
         }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color(.sRGB, red: 242/255, green: 242/255, blue: 242/255)) // gris 242,242,242
+                .shadow(color: Color(.sRGB, red: 0.9, green: 0.9, blue: 0.9), radius: 6, x: 0, y: 3)
+        )
+        .padding(.horizontal)
     }
 }
 
 
 #Preview {
-    GraficaPie(empleados:listaEmpleados,empleado: .constant(
+    GraficaPie(empleados: listaEmpleados, empleado: .constant(
         Empleado(
             id: 1,
             nombre: "Emilio",
             apellido: "Barragan",
-            dias: [10, 13, 20, 18, 21, 9, 6]
+            semanas: [10, 13, 20, 18, 21, 9, 6]
         )
     ))
 }
