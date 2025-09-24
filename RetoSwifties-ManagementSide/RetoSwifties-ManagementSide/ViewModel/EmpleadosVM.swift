@@ -6,40 +6,48 @@
 //
 
 import Foundation
+import Combine
 
-@MainActor
 final class EmpleadosVM: ObservableObject {
     @Published var query: String = ""
     @Published private(set) var empleados: [Empleado] = []
 
-    // Datos locales
-    private var base: [Empleado] = [
-        .init(nombre: "Juan Perez"),
-        .init(nombre: "María Lopez"),
-        .init(nombre: "Pedro Ruiz"),
-        .init(nombre: "Ana Torres"),
-        .init(nombre: "Rodrigo Vela"),
-        .init(nombre: "Elian Genc")
-    ]
+    // Si Empleado.id es UUID:
+    private var ocupados = Set<UUID>()
+    // Si Empleado.id es Int, usa: private var ocupados = Set<Int>()
 
-    init() { empleados = base }
-
+    // Lista dinámica según query y ocupados
     var filtrados: [Empleado] {
-        let q = query.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        let disponibles = base.filter { $0.disponible }
-        guard !q.isEmpty else { return disponibles }
-        return disponibles.filter { $0.nombre.lowercased().contains(q) }
+        empleados.filter { emp in
+            let disponible = !ocupados.contains(emp.id)
+            let coincide = query.isEmpty || emp.nombre.localizedCaseInsensitiveContains(query)
+            return disponible && coincide
+        }
     }
 
-    func asignar(_ empleado: Empleado) {
-        guard let idx = base.firstIndex(where: { $0.id == empleado.id }) else { return }
-        base[idx].disponible = false
-        empleados = base
+    // Marcar como ocupado al asignar
+    func asignar(_ e: Empleado) {
+        ocupados.insert(e.id)
+        objectWillChange.send()
     }
 
+    // Devolver por nombre (porque Ventanilla guarda el nombre)
+    func devolverPorNombre(_ nombre: String) {
+        guard let e = empleados.first(where: { $0.nombre == nombre }) else { return }
+        ocupados.remove(e.id)
+        objectWillChange.send()
+    }
+
+    // Demo opcional
     func resetDemo() {
-        base = base.map { Empleado(id: $0.id, nombre: $0.nombre, disponible: true) }
-        empleados = base
-        query = ""
+        empleados = [
+            Empleado(id: UUID(), nombre: "Andrés Canavati"),
+            Empleado(id: UUID(), nombre: "Elian Genc"),
+            Empleado(id: UUID(), nombre: "Rodrigo Vela"),
+            Empleado(id: UUID(), nombre: "Daniela Ruiz"),
+            Empleado(id: UUID(), nombre: "María López"),
+        ]
+        ocupados.removeAll()
     }
 }
+

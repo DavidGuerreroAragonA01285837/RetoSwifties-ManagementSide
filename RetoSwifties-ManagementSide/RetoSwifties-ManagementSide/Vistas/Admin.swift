@@ -19,20 +19,18 @@ struct Admin: View {
     ]
 
     @State private var modoLiberar = false
-    @State private var modoAsignar = false                   // ← NUEVO
-    @State private var empleadoPendiente: Empleado? = nil    // ← NUEVO
+    @State private var modoAsignar = false
+    @State private var empleadoPendiente: Empleado? = nil
 
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                // Título
                 Text("Asignación de ventanillas")
                     .font(.system(size: 55, weight: .bold))
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.top, 20)
                     .foregroundColor(Color(red: 102/255, green: 102/255, blue: 102/255))
 
-                // Mensajes de modo
                 if modoLiberar {
                     Text("Toca una ventanilla ocupada para liberarla")
                         .font(.title2)
@@ -43,7 +41,6 @@ struct Admin: View {
                     ModoBanner(texto: "Selecciona una ventanilla para asignar a \(emp.nombre)")
                 }
 
-                // Grid con realce cuando estamos asignando
                 VentanillaGrid(
                     ventanillas: ventanillas,
                     enModoLiberar: modoLiberar,
@@ -52,19 +49,16 @@ struct Admin: View {
                             liberar(id: v.id)
                             modoLiberar = false
                         } else if modoAsignar, let emp = empleadoPendiente {
-                            // Asignamos aquí
                             if let i = ventanillas.firstIndex(where: { $0.id == v.id }) {
                                 ventanillas[i].ocupada = true
                                 ventanillas[i].nombreEmpleado = emp.nombre
                             }
-                            // Salimos del modo asignar
                             empleadoPendiente = nil
                             withAnimation(.easeInOut) { modoAsignar = false }
                         }
                     }
                 )
 
-                // Botón liberar (deshabilitado en modo asignar)
                 Button {
                     withAnimation(.easeInOut) { modoLiberar.toggle() }
                 } label: {
@@ -78,15 +72,19 @@ struct Admin: View {
                                 .fill(modoLiberar ? .black.opacity(0.7) : .orange)
                         )
                 }
-                .disabled(modoAsignar) // ← clave para no mezclar flujos
+                .disabled(modoAsignar)
                 .opacity(modoAsignar ? 0.5 : 1.0)
                 .padding(.horizontal, 20)
                 .padding(.bottom, 8)
                 .padding(.top, 8)
 
-                // Sección inferior: ahora inicia el modo asignar
-                EmpleadosDisponiblesSection { empleado in
-                    // Cambiamos el flujo: primero eligen empleado → luego la card
+                // 🔽 AQUÍ ESTÁ LA MODIFICACIÓN
+                EmpleadosDisponiblesSection(
+                    isBloqueado: modoAsignar        // pasa el bloqueo a la lista
+                ) { empleado in
+                    // si ya estamos asignando, ignorar nuevos taps
+                    if modoAsignar { return }
+
                     empleadoPendiente = empleado
                     withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
                         modoAsignar = true
@@ -118,12 +116,11 @@ private struct ModoBanner: View {
             .foregroundColor(.white)
             .background(
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(Color(red: 0/255, green: 104/255, blue: 138/255)) // #01688A del “ocupado”
+                    .fill(Color(red: 0/255, green: 104/255, blue: 138/255))
             )
             .padding(.horizontal, 20)
     }
 }
 
-#Preview{
-    Admin()
-}
+#Preview { Admin() }
+
