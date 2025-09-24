@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct VentanillaCard: View {
     var ventanilla: Ventanilla
     var enModoLiberar: Bool = false
