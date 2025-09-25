@@ -42,21 +42,6 @@ struct EmpleadoRow: View {
     }
 }
 
-#Preview {
-    VStack(spacing: 0) {
-        EmpleadoRow(
-            empleado: Empleado(id: UUID(), nombre: "Andrés Canavati"),
-            disabled: false
-        ) { }
-        Divider()
-        EmpleadoRow(
-            empleado: Empleado(id: UUID(), nombre: "María López"),
-            disabled: true
-        ) { }
-    }
-    .padding()
-    .background(Color(white: 0.98))
-}
 
 
 

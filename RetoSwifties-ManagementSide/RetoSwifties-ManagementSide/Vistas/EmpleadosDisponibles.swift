@@ -37,13 +37,9 @@ struct EmpleadosDisponiblesSection: View {
                         empleado: emp,
                         disabled: isBloqueado
                     ) {
-                        // Seguridad: si está bloqueado, no dispares nada
                         guard !isBloqueado else { return }
-
-                        // Marca en la VM si quieres reflejar "tomado"
+                        // Esta llamada no hace POST (no hay ventanilla objetivo), solo mantiene compat
                         vm.asignar(emp)
-
-                        // Notifica al padre (Admin) para activar modoAsignar
                         onAsignar?(emp)
                     }
                     .padding(.horizontal, 20)
@@ -70,14 +66,13 @@ struct EmpleadosDisponiblesSection: View {
             }
         }
         .padding(.top, 6)
-        .onAppear {
-            // Si usas datos demo, inicializa aquí
-            vm.resetDemo()
-        }
+        // 👇 Importante: ya NO resetear con datos de demo
+        // .onAppear { vm.resetDemo() }
     }
 }
 
 #Preview {
     EmpleadosDisponiblesSection(isBloqueado: false) { _ in }
 }
+
 

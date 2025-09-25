@@ -4,23 +4,27 @@
 //
 //  Created by Alumno on 17/09/25.
 //
+//
+//  Admin.swift
+//  RetoSwifties
+//
+//  Created by Alumno on 17/09/25.
+//
+
 import SwiftUI
+import Combine
 
 struct Admin: View {
-    @State private var ventanillas: [Ventanilla] = [
-        Ventanilla(id: 1, nombreEmpleado: "Andrés Canavati", ocupada: true),
-        Ventanilla(id: 2, nombreEmpleado: "Elian Genc", ocupada: true),
-        Ventanilla(id: 3, nombreEmpleado: "Rodrigo Vela", ocupada: true),
-        Ventanilla(id: 4, ocupada: false),
-        Ventanilla(id: 5, nombreEmpleado: "Daniela Ruiz", ocupada: true),
-        Ventanilla(id: 6, ocupada: false),
-        Ventanilla(id: 7, nombreEmpleado: "María López", ocupada: true),
-        Ventanilla(id: 8, ocupada: false)
-    ]
+    // Estado que se muestra en la grid (ahora viene del API)
+    @State private var ventanillas: [Ventanilla] = []
 
+    // Estados de interacción (sin cambios visuales)
     @State private var modoLiberar = false
     @State private var modoAsignar = false
     @State private var empleadoPendiente: Empleado? = nil
+
+    // Para escuchar eventos del API y refrescar
+    @State private var cancellable: AnyCancellable?
 
     var body: some View {
         ScrollView {
@@ -46,12 +50,29 @@ struct Admin: View {
                     enModoLiberar: modoLiberar,
                     onTapCard: { v in
                         if modoLiberar, v.ocupada {
-                            liberar(id: v.id)
+                            // LIBERAR vía API y refrescar
+                            Task {
+                                do {
+                                    try await VentanillasAPI.liberar(idVentanilla: v.id)
+                                    await cargarEstado()
+                                } catch {
+                                    print("Error al liberar ventanilla \(v.id): \(error)")
+                                }
+                            }
                             modoLiberar = false
                         } else if modoAsignar, let emp = empleadoPendiente {
-                            if let i = ventanillas.firstIndex(where: { $0.id == v.id }) {
-                                ventanillas[i].ocupada = true
-                                ventanillas[i].nombreEmpleado = emp.nombre
+                            // ASIGNAR: resolvemos idEmpleado real y posteamos
+                            Task {
+                                do {
+                                    if let idEmpleado = try await resolverIdEmpleadoPorNombre(emp.nombre) {
+                                        _ = try await APIService.shared.asignar(idVentanilla: v.id, idEmpleado: idEmpleado)
+                                        await cargarEstado()
+                                    } else {
+                                        print("No encontré idEmpleado para '\(emp.nombre)' en disponibles.")
+                                    }
+                                } catch {
+                                    print("Error al asignar \(emp.nombre) a ventanilla \(v.id): \(error)")
+                                }
                             }
                             empleadoPendiente = nil
                             withAnimation(.easeInOut) { modoAsignar = false }
@@ -78,11 +99,11 @@ struct Admin: View {
                 .padding(.bottom, 8)
                 .padding(.top, 8)
 
-                // 🔽 AQUÍ ESTÁ LA MODIFICACIÓN
+                // Mantengo tu sección tal cual; solo uso el callback
                 EmpleadosDisponiblesSection(
-                    isBloqueado: modoAsignar        // pasa el bloqueo a la lista
+                    isBloqueado: modoAsignar
                 ) { empleado in
-                    // si ya estamos asignando, ignorar nuevos taps
+                    // Evitar taps repetidos si ya estamos en asignación
                     if modoAsignar { return }
 
                     empleadoPendiente = empleado
@@ -97,12 +118,41 @@ struct Admin: View {
         }
         .background(Color(red: 242/255, green: 242/255, blue: 242/255))
         .frame(maxHeight: .infinity, alignment: .top)
+        .onAppear {
+            // Carga inicial del estado del backend
+            Task { await cargarEstado() }
+
+            // Suscribirse a eventos del bus (asignar/liberar) para refrescar automáticamente
+            cancellable = APIService.AppEvents.shared.publisher
+                .receive(on: DispatchQueue.main)
+                .sink { _ in
+                    Task { await cargarEstado() }
+                }
+        }
+        .onDisappear {
+            cancellable?.cancel()
+            cancellable = nil
+        }
     }
 
-    private func liberar(id: Int) {
-        guard let i = ventanillas.firstIndex(where: { $0.id == id }) else { return }
-        ventanillas[i].ocupada = false
-        ventanillas[i].nombreEmpleado = nil
+    // MARK: - Helpers
+
+    /// Trae el estado real de las ventanillas desde el API y mapea a tu modelo UI
+    @MainActor
+    private func cargarEstado() async {
+        do {
+            ventanillas = try await VentanillasAPI.cargarEstado()
+        } catch {
+            print("Error cargando ventanillas: \(error)")
+        }
+    }
+
+    /// Resuelve el idEmpleado (Int backend) a partir del nombre mostrado.
+    /// Sin tocar vistas: aprovechamos el endpoint de disponibles con query por nombre.
+    private func resolverIdEmpleadoPorNombre(_ nombre: String) async throws -> Int? {
+        let lista = try await APIService.shared.empleadosDisponibles(query: nombre)
+        // Elegimos el que coincida exacto primero; si no, tomamos el primero de la lista
+        return lista.first(where: { $0.nombre == nombre })?.idEmpleado ?? lista.first?.idEmpleado
     }
 }
 
@@ -123,4 +173,3 @@ private struct ModoBanner: View {
 }
 
 #Preview { Admin() }
-
