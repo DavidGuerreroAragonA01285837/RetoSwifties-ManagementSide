@@ -12,7 +12,6 @@ struct VentanillaGrid: View {
     var enModoLiberar: Bool = false
     var onTapCard: (Ventanilla) -> Void
 
-    // Grid de 4 columnas
     private let columnas = Array(repeating: GridItem(.flexible(), spacing: 12), count: 4)
 
     var body: some View {

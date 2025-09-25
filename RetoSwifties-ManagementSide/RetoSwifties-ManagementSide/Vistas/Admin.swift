@@ -18,14 +18,12 @@ struct Admin: View {
         ScrollView {
             VStack(spacing: 16) {
 
-                // Encabezado (respeta tu estilo existente)
                 Text("Asignación de ventanillas")
                     .font(.system(size: 55, weight: .bold))
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.top, 20)
                     .foregroundColor(Color(red: 102/255, green: 102/255, blue: 102/255))
 
-                // Grid de ventanillas (usa tus sub-vistas tal cual)
                 VentanillaGrid(
                     ventanillas: ventanillas,
                     enModoLiberar: modoLiberar,
@@ -64,11 +62,9 @@ struct Admin: View {
                 .opacity(empleadoSeleccionado == nil ? 1 : 0.6)
                 .disabled(empleadoSeleccionado != nil)
 
-                // Sección de empleados disponibles (usa tus sub-vistas externas)
                 EmpleadosDisponibles(
                     bloqueado: empleadoSeleccionado != nil,
                     onElegir: { emp in
-                        // Mantiene tu flujo: primero elegir empleado, luego tocar ventanilla
                         empleadoSeleccionado = emp
                         modoLiberar = false
                     }

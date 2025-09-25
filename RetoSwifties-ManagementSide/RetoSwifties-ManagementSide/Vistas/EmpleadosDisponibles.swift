@@ -20,7 +20,6 @@ struct EmpleadosDisponibles: View {
                 .foregroundColor(Color(red: 102/255, green: 102/255, blue: 102/255))
                 .padding(.horizontal, 20)
 
-            // BuscarField está en su archivo propio
             HStack {
                 BuscarField(text: $vm.query)
                     .frame(height: 42)
@@ -34,7 +33,7 @@ struct EmpleadosDisponibles: View {
                         disabled: bloqueado
                     ) {
                         guard !bloqueado else { return }
-                        onElegir(emp)               // La vista Admin completa la asignación
+                        onElegir(emp)
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 8)
@@ -60,11 +59,6 @@ struct EmpleadosDisponibles: View {
     }
 }
 
-#Preview {
-    EmpleadosDisponibles(bloqueado: false) { _ in }
-}
-
-// MARK: - ViewModel embebido (sin UI, no afecta lo visual)
 final class EmpleadosVM: ObservableObject {
     @Published var query: String = ""
     @Published private(set) var empleados: [Empleado] = []
@@ -73,7 +67,6 @@ final class EmpleadosVM: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     init() {
-        // Debounce para búsqueda remota
         $query
             .removeDuplicates()
             .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
@@ -83,7 +76,6 @@ final class EmpleadosVM: ObservableObject {
             }
             .store(in: &cancellables)
 
-        // Cuando asignen/liberen, refrescamos la lista
         AppEvents.shared.publisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -104,7 +96,6 @@ final class EmpleadosVM: ObservableObject {
         }
     }
 
-    // Compat: algunas vistas llamaban vm.filtrar(newValue)
     func filtrar(_ texto: String) {
         Task { await reloadDesdeAPI(query: texto.isEmpty ? nil : texto) }
     }

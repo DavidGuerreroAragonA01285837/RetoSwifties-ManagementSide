@@ -12,7 +12,6 @@ enum API {
     static let baseURL = URL(string: "https://swifties.tc2007b.tec.mx:10206")!
 }
 
-// MARK: - Endpoints
 private enum Endpoint {
     case empleadosDisponibles(query: String?)
     case ventanillasEstado
@@ -57,7 +56,6 @@ private enum Endpoint {
     }
 }
 
-// MARK: - DTOs
 private struct APIEmpleado: Codable {
     let idEmpleado: Int
     let nombre: String
@@ -80,7 +78,6 @@ struct APIMessageOK: Codable {
     let liberadas: Int?
 }
 
-// MARK: - Event Bus
 enum AppEvent {
     case ventanillaAsignada(idVentanilla: Int, idEmpleado: Int)
     case ventanillaLiberada(idVentanilla: Int)
@@ -93,7 +90,6 @@ final class AppEvents {
     func post(_ e: AppEvent) { DispatchQueue.main.async { [publisher] in publisher.send(e) } }
 }
 
-// MARK: - APIService
 final class APIService {
     static let shared = APIService()
     private let session: URLSession
@@ -114,7 +110,6 @@ final class APIService {
         }
     }
 
-    // MARK: - Core GET/POST
     private func get<T: Decodable>(_ ep: Endpoint) async throws -> T {
         let req = ep.request
         let (data, resp) = try await session.data(for: req)
@@ -129,7 +124,6 @@ final class APIService {
         return try JSONDecoder().decode(T.self, from: data)
     }
 
-    // MARK: - Public API
     func empleadosDisponibles(query: String? = nil) async throws -> [Empleado] {
         let raw: [APIEmpleado] = try await get(.empleadosDisponibles(query: query))
         return raw.map { Empleado(id: $0.idEmpleado, nombre: $0.nombre, disponible: true) }
