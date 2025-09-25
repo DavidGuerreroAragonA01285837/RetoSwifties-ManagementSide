@@ -8,13 +8,7 @@
 import Foundation
 
 struct Empleado: Identifiable, Hashable, Codable {
-    let id: UUID
+    let id: Int
     var nombre: String
     var disponible: Bool
-
-    init(id: UUID = .init(), nombre: String, disponible: Bool = true) {
-        self.id = id
-        self.nombre = nombre
-        self.disponible = disponible
-    }
 }

@@ -6,15 +6,12 @@
 //
 
 import SwiftUI
+import Combine
 
-struct EmpleadosDisponiblesSection: View {
+struct EmpleadosDisponibles: View {
     @StateObject private var vm = EmpleadosVM()
-
-    /// Cuando es true, se deshabilita el botón "ASIGNAR" (flujo bloqueado hasta elegir ventanilla)
-    var isBloqueado: Bool = false
-
-    /// Callback cuando se toca "ASIGNAR" en un empleado
-    var onAsignar: ((Empleado) -> Void)? = nil
+    var bloqueado: Bool = false
+    var onElegir: (Empleado) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -23,42 +20,35 @@ struct EmpleadosDisponiblesSection: View {
                 .foregroundColor(Color(red: 102/255, green: 102/255, blue: 102/255))
                 .padding(.horizontal, 20)
 
-            // Buscador: bindeado DIRECTO al @Published query de la VM
+            // BuscarField está en su archivo propio
             HStack {
                 BuscarField(text: $vm.query)
                     .frame(height: 42)
                     .padding(.horizontal, 20)
             }
 
-            // Lista filtrada por vm.query
             VStack(spacing: 0) {
                 ForEach(vm.filtrados) { emp in
                     EmpleadoRow(
                         empleado: emp,
-                        disabled: isBloqueado
+                        disabled: bloqueado
                     ) {
-                        guard !isBloqueado else { return }
-                        // Esta llamada no hace POST (no hay ventanilla objetivo), solo mantiene compat
-                        vm.asignar(emp)
-                        onAsignar?(emp)
+                        guard !bloqueado else { return }
+                        onElegir(emp)               // La vista Admin completa la asignación
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 8)
 
-                    Divider()
-                        .padding(.leading, 20)
+                    Divider().padding(.leading, 20)
                 }
             }
             .background(.white)
             .clipShape(RoundedRectangle(cornerRadius: 10))
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.black.opacity(0.08), lineWidth: 1)
-            )
+            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.black.opacity(0.08), lineWidth: 1))
             .padding(.horizontal, 20)
 
-            if isBloqueado {
-                Text("Asignación en curso: selecciona una ventanilla para completar.")
+            if bloqueado {
+                Text("Asignación en curso: toca una ventanilla para completar.")
                     .font(.footnote)
                     .foregroundColor(.gray)
                     .padding(.horizontal, 22)
@@ -66,13 +56,59 @@ struct EmpleadosDisponiblesSection: View {
             }
         }
         .padding(.top, 6)
-        // 👇 Importante: ya NO resetear con datos de demo
-        // .onAppear { vm.resetDemo() }
+        .onAppear { Task { await vm.reloadDesdeAPI(query: nil) } }
     }
 }
 
 #Preview {
-    EmpleadosDisponiblesSection(isBloqueado: false) { _ in }
+    EmpleadosDisponibles(bloqueado: false) { _ in }
 }
+
+// MARK: - ViewModel embebido (sin UI, no afecta lo visual)
+final class EmpleadosVM: ObservableObject {
+    @Published var query: String = ""
+    @Published private(set) var empleados: [Empleado] = []
+    @Published private(set) var filtrados: [Empleado] = []
+
+    private var cancellables = Set<AnyCancellable>()
+
+    init() {
+        // Debounce para búsqueda remota
+        $query
+            .removeDuplicates()
+            .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
+            .sink { [weak self] q in
+                guard let self = self else { return }
+                Task { await self.reloadDesdeAPI(query: q.isEmpty ? nil : q) }
+            }
+            .store(in: &cancellables)
+
+        // Cuando asignen/liberen, refrescamos la lista
+        AppEvents.shared.publisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                Task { await self.reloadDesdeAPI(query: self.query.isEmpty ? nil : self.query) }
+            }
+            .store(in: &cancellables)
+    }
+
+    @MainActor
+    func reloadDesdeAPI(query: String?) async {
+        do {
+            let lista = try await APIService.shared.empleadosDisponibles(query: query)
+            empleados = lista
+            filtrados = lista
+        } catch {
+            print("ERROR empleados_disponibles: \(error)")
+        }
+    }
+
+    // Compat: algunas vistas llamaban vm.filtrar(newValue)
+    func filtrar(_ texto: String) {
+        Task { await reloadDesdeAPI(query: texto.isEmpty ? nil : texto) }
+    }
+}
+
 
 

@@ -11,11 +11,12 @@ struct Ventanilla: Identifiable, Equatable {
     let id: Int
     var nombreEmpleado: String?
     var ocupada: Bool
-    
+
     init(id: Int, nombreEmpleado: String? = nil, ocupada: Bool = false) {
         self.id = id
         self.nombreEmpleado = nombreEmpleado
         self.ocupada = ocupada
     }
 }
+
 
