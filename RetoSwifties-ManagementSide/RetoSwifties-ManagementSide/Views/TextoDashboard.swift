@@ -9,7 +9,9 @@ import SwiftUI
 
 struct TextoDashboard: View {
     @Binding var empleado: Empleado
-    let empleados = listaEmpleados
+    //let empleados = listaEmpleados
+    @State public var empleados: [Empleado]
+    
     
     var body: some View {
         // Título más grande
@@ -33,7 +35,7 @@ struct TextoDashboard: View {
 
         // Botón con nombre del empleado actual
         Button(action: {}) {
-            Text("\(empleado.nombre) \(empleado.apellido)")
+            Text("\(empleado.nombre)")
                 .font(.title2)
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity, minHeight: 70)
@@ -47,14 +49,14 @@ struct TextoDashboard: View {
 
 
 #Preview {
+    let response1 = EmpleadoResponse(nombre: "Emilio", total_atendidos: 20, turnDate: "2025-09-23")
+    let response2 = EmpleadoResponse(nombre: "David", total_atendidos: 15, turnDate: "2025-09-23")
+    let response3 = EmpleadoResponse(nombre: "Rodrigo", total_atendidos: 10, turnDate: "2025-09-23")
+    
+    let empleados = [Empleado(from: response1), Empleado(from: response2), Empleado(from: response3)]
+    
     TextoDashboard(
-            empleado: .constant(
-                Empleado(
-                    id: 1,
-                    nombre: "Emilio",
-                    apellido: "Barragan",
-                    semanas: [10, 13, 20, 18, 21, 9, 6]
-                )
-            )
-        )
+        empleado: .constant(Empleado(from: response1)),
+        empleados: empleados
+    )
 }

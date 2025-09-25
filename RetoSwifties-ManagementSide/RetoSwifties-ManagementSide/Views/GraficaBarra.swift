@@ -72,12 +72,10 @@ struct GraficaBarra: View {
 }
 
 #Preview {
-    GraficaBarra(empleado: .constant(
-        Empleado(
-            id: 1,
-            nombre: "Emilio",
-            apellido: "Barragan",
-            semanas: [10, 13, 20, 18, 21, 9, 6]
-        )
-    ))
+    let response = EmpleadoResponse(
+        nombre: "Emilio Barragan",
+        total_atendidos: 20,
+        turnDate: "2025-09-23"
+    )
+    return GraficaBarra(empleado: .constant(Empleado(from: response)))
 }
