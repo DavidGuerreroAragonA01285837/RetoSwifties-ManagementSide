@@ -14,36 +14,33 @@ struct TextoDashboard: View {
     
     
     var body: some View {
-        // Título más grande
-        Text("Dashboard")
+        Text("Resumen de Empleados")
             .font(.system(size: 50, weight: .bold))
-            .padding(.top, 40)
+            //.padding(.top, 40)
             .foregroundColor(Color(.sRGB, red: 102/255, green: 102/255, blue: 102/255))
 
-        // Picker que actualiza el empleado seleccionado
         Picker("Empleado", selection: $empleado) {
             ForEach(empleados) { emp in
                 Text(emp.nombre).tag(emp)
             }
+            .font(.system(size: 40, weight: .bold))
         }
         .pickerStyle(.menu)
-        .frame(width: 300, height: 60)
+        .frame(width: 170, height: 30)
         .padding()
         .background(Color(.sRGB, red: 211/255, green: 211/255, blue: 211/255))
         .cornerRadius(15)
         .font(.largeTitle)
+        .font(.system(size: 40, weight: .bold))
 
-        // Botón con nombre del empleado actual
-        Button(action: {}) {
-            Text("\(empleado.nombre)")
-                .font(.title2)
+        Text("\(empleado.nombre)")
+                .font(.system(size: 40, weight: .bold))
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity, minHeight: 70)
                 .background(Color.orange)
                 .cornerRadius(12)
-        }
         .frame(width: 350)
-        .padding(.top, 10)
+        //.padding(.top, 10)
     }
 }
 

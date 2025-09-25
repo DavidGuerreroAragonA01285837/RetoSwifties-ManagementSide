@@ -17,7 +17,7 @@ struct RetoSwifties_ManagementSideApp: App {
             
             let empleados = [Empleado(from: response1), Empleado(from: response2), Empleado(from: response3)]
             
-            return ContentView(
+            return DashboardView(
                 empleado: empleados[0],
                 listaEmpleados: empleados
             )

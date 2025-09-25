@@ -38,7 +38,7 @@ struct Metricas: View {
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color(.sRGB, red: 242/255, green: 242/255, blue: 242/255)) // gris 242,242,242
+                .fill(Color(.sRGB, red: 242/255, green: 242/255, blue: 242/255))
                 .shadow(color: Color(.sRGB, red: 0.9, green: 0.9, blue: 0.9),
                         radius: 6, x: 0, y: 3)
         )

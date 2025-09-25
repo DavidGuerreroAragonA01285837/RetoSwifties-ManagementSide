@@ -1,19 +1,12 @@
-//
-//  SontentView.swift
-//  RetoSwifties-ManagementSide
-//
-//  Created by Alumno on 24/09/25.
-//
-
 import SwiftUI
 import Charts
 
-struct sontentView: View {
+struct DashboardView: View {
     @State public var empleado: Empleado = Empleado(nombre: "Cargando...", semanas: [0,1,2,3])
     @State public var listaEmpleados: [Empleado] = []
     
     var body: some View {
-        ScrollView {
+        //ScrollView {
             VStack(spacing: 20) {
                 
                 if !listaEmpleados.isEmpty {
@@ -22,9 +15,9 @@ struct sontentView: View {
                     
                     // Gráfica de barras
                     GraficaBarra(empleado: $empleado)
-                    
-                    // Métricas
+                            // Métricas
                     Metricas(empleado: $empleado)
+                        .padding(.top, -20)
                     
                     // Gráfico circular
                     GraficaPie(empleados: listaEmpleados, empleado: $empleado)
@@ -37,6 +30,12 @@ struct sontentView: View {
                 
                 Spacer()
             }
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(.sRGB, red: 242/255, green: 242/255, blue: 242/255))
+                    .shadow(color: Color(.sRGB, red: 0.9, green: 0.9, blue: 0.9),
+                            radius: 6, x: 0, y: 3)
+            )
             .padding()
             .onAppear {
                 EmpleadoService.shared.fetchEmpleadosAgrupados { empleados in
@@ -47,10 +46,9 @@ struct sontentView: View {
                 }
             }
         }
-    }
+   // }
 }
 
 #Preview {
-    // Preview con placeholder
-    sontentView()
+    DashboardView()
 }

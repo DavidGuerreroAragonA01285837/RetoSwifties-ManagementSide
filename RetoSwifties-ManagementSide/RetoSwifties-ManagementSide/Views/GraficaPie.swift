@@ -9,19 +9,17 @@ import SwiftUI
 import Charts
 
 struct GraficaPie: View {
-    var empleados: [Empleado]   // lista completa
-    @Binding var empleado: Empleado // el seleccionado
+    var empleados: [Empleado]
+    @Binding var empleado: Empleado
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            
-            // Título
+
             Text("Clientes atendidos por \(empleado.nombre)")
                 .font(.headline)
                 .foregroundColor(.primary)
                 .padding(.horizontal)
-            
-            // Gráfico circular
+
             Chart {
                 ForEach(empleados) { e in
                     SectorMark(
@@ -30,8 +28,8 @@ struct GraficaPie: View {
                     )
                     .foregroundStyle(
                         e.id == empleado.id
-                        ? Color(red: 1/255, green: 104/255, blue: 138/255)   // azul
-                        : Color(red: 255/255, green: 153/255, blue: 0/255)  // naranja
+                        ? Color(red: 1/255, green: 104/255, blue: 138/255)
+                        : Color(red: 255/255, green: 153/255, blue: 0/255)
                     )
                     .annotation(position: .overlay) {
                     }
@@ -43,7 +41,7 @@ struct GraficaPie: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color(.sRGB, red: 242/255, green: 242/255, blue: 242/255)) // gris 242,242,242
+                .fill(Color(.sRGB, red: 242/255, green: 242/255, blue: 242/255))
                 .shadow(color: Color(.sRGB, red: 0.9, green: 0.9, blue: 0.9), radius: 6, x: 0, y: 3)
         )
         .padding(.horizontal)
@@ -58,7 +56,7 @@ struct GraficaPie: View {
         turnDate: "2025-09-23"
     )
     GraficaPie(
-        empleados: [Empleado(from: response)],   // 👈 necesitas pasar lista
+        empleados: [Empleado(from: response)],
         empleado: .constant(Empleado(from: response))
     )
 }

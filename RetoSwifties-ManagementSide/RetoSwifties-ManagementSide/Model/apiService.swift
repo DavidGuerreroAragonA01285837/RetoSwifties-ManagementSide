@@ -10,8 +10,6 @@ import Foundation
 class EmpleadoService: NSObject, URLSessionDelegate {
     
     static let shared = EmpleadoService()
-    
-    // Función que ignora certificados
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         let credential = URLCredential(trust: challenge.protectionSpace.serverTrust!)
@@ -33,28 +31,27 @@ class EmpleadoService: NSObject, URLSessionDelegate {
             }
         }
     func fetchEmpleados(completion: @escaping ([Empleado]) -> Void) {
-        guard let url = URL(string: "https://10.14.255.40:10202/empleados/obtener") else {
-            print("❌ URL inválida")
+        guard let url = URL(string: "https://10.14.255.40:10206/empleados/obtener") else {
+            print("URL inválida")
             return
         }
         
-        // Configurar sesión con el delegate que ignora SSL
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
         
         let task = session.dataTask(with: url) { data, response, error in
             if let error = error {
-                print("❌ Error en la llamada: \(error.localizedDescription)")
+                print("Error en la llamada: \(error.localizedDescription)")
                 return
             }
             
             guard let httpResponse = response as? HTTPURLResponse,
                   httpResponse.statusCode == 200 else {
-                print("❌ Respuesta inválida del servidor")
+                print("Respuesta inválida del servidor")
                 return
             }
             
             guard let data = data else {
-                print("❌ No se recibieron datos")
+                print("No se recibieron datos")
                 return
             }
             
@@ -67,7 +64,7 @@ class EmpleadoService: NSObject, URLSessionDelegate {
                     completion(empleados)
                 }
             } catch {
-                print("❌ Error al decodificar JSON: \(error)")
+                print("Error al decodificar JSON: \(error)")
             }
         }
         task.resume()
