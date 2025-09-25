@@ -25,6 +25,7 @@ struct TextoDashboard: View {
             }
             .font(.system(size: 40, weight: .bold))
         }
+        .tint(Color.orange)
         .pickerStyle(.menu)
         .frame(width: 170, height: 30)
         .padding()
