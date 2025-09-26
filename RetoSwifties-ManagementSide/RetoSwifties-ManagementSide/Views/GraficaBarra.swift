@@ -57,7 +57,7 @@ struct GraficaBarra: View {
                             }
                         }
                     }
-                    .frame(height: 320)
+                    .frame(height: 250)
                     .padding(.horizontal)
                 }
                 .padding()

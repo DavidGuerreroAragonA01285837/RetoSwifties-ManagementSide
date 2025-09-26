@@ -35,7 +35,7 @@ struct GraficaPie: View {
                     }
                 }
             }
-            .frame(height: 280)
+            .frame(height: 230)
             .padding(.horizontal)
         }
         .padding()

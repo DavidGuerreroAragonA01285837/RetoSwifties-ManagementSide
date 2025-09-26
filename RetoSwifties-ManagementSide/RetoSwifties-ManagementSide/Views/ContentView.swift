@@ -10,7 +10,19 @@ import SwiftUI
 struct ContentView: View {
     
     var body: some View {
-        Ajustes(idEmpleado: 1)
+        NavigationStack{
+            
+            NavigationLink("Go to Admin"){
+                AdminView()
+                
+                
+            }
+            NavigationLink("Go to Employee"){
+                EmployeeView()
+                
+                
+            }
+        }
     }
     }
 
