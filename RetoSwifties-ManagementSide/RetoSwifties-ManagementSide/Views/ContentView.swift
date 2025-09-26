@@ -8,15 +8,12 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var ventanillaNum = 1
     var body: some View {
-        VStack {
-            AdminTurnosView(ventanillaNum: $ventanillaNum)
+        VStack{
         }
-        .padding()
     }
-}	
-	
+}
+
 #Preview {
     ContentView()
 }
