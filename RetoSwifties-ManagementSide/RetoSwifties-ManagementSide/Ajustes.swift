@@ -36,7 +36,7 @@ struct Ajustes: View {
                         .foregroundColor(empleado.isDisponible ? .green : .red)
                 }
                 .padding()
-                .background(Color.gray.opacity(0.2))
+                .background(Color.orange.opacity(0.8))
                 .cornerRadius(20)
                 .shadow(color: .gray.opacity(0.3), radius: 10, x: 0, y: 5)
                 .padding(.horizontal, -20)
