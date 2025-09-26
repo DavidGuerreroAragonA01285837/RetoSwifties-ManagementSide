@@ -14,15 +14,16 @@ struct ContentView: View {
             
             NavigationLink("Go to Admin"){
                 AdminView()
-                
+                    .navigationBarBackButtonHidden(true)
                 
             }
             NavigationLink("Go to Employee"){
                 EmployeeView()
-                
+                    .navigationBarBackButtonHidden(true)
                 
             }
         }
+        
     }
     }
 

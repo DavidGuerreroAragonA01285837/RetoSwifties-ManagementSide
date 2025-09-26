@@ -4,7 +4,7 @@ struct Ajustes: View {
     let idEmpleado: Int                  // recibimos solo el ID desde login
     @StateObject private var service = EmpleadoService()
     @State private var darkMode = false
-
+    @Environment(\.dismiss) var dismiss
     var body: some View {
         VStack(spacing: 40) {
             if service.isLoading {
@@ -42,7 +42,7 @@ struct Ajustes: View {
                 .padding(.horizontal, -20)
                 
                 HStack(spacing: 50) {
-                    Button(action: { print("Cerrar Sesión") }) {
+                    Button(action: { dismiss()}) {
                         Label("Cerrar Sesión", systemImage: "rectangle.portrait.and.arrow.right")
                             .frame(maxWidth: .infinity)
                     }

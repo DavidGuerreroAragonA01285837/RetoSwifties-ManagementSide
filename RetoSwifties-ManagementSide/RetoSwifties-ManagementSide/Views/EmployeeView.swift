@@ -18,7 +18,7 @@ struct EmployeeView: View {
                     Text("Ventanilla")
                 }
             
-            Ajustes(idEmpleado: 0)
+            Ajustes(idEmpleado: 1)
                 .tabItem{
                     Image(systemName: "gearshape")
                     Text("Ajustes")
