@@ -10,7 +10,7 @@ import Charts
 
 struct GraficaBarra: View {
     //let dias = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]
-    @Binding var empleado: Empleado
+    @Binding var empleado: EmpleadoD
     //@State public var clientes: [Int]
     //let clientes = [29,39,28,12,1,2,3]
     
@@ -77,5 +77,5 @@ struct GraficaBarra: View {
         total_atendidos: 20,
         turnDate: "2025-09-23"
     )
-    return GraficaBarra(empleado: .constant(Empleado(from: response)))
+    return GraficaBarra(empleado: .constant(EmpleadoD(from: response)))
 }

@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct TextoDashboard: View {
-    @Binding var empleado: Empleado
+    @Binding var empleado: EmpleadoD
     //let empleados = listaEmpleados
-    @State public var empleados: [Empleado]
+    @State public var empleados: [EmpleadoD]
     
     
     var body: some View {
@@ -51,10 +51,10 @@ struct TextoDashboard: View {
     let response2 = EmpleadoResponse(nombre: "David", total_atendidos: 15, turnDate: "2025-09-23")
     let response3 = EmpleadoResponse(nombre: "Rodrigo", total_atendidos: 10, turnDate: "2025-09-23")
     
-    let empleados = [Empleado(from: response1), Empleado(from: response2), Empleado(from: response3)]
+    let empleados = [EmpleadoD(from: response1), EmpleadoD(from: response2), EmpleadoD(from: response3)]
     
     TextoDashboard(
-        empleado: .constant(Empleado(from: response1)),
+        empleado: .constant(EmpleadoD(from: response1)),
         empleados: empleados
     )
 }

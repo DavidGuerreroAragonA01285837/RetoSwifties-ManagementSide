@@ -22,7 +22,7 @@ struct EmpleadoResponse: Identifiable, Codable, Hashable {
 }
 
 // model/Empleado.swift
-struct Empleado: Identifiable, Hashable, Codable {
+struct EmpleadoD: Identifiable, Hashable, Codable {
     var id: String {nombre}
     var nombre: String
     var semanas: [Int]

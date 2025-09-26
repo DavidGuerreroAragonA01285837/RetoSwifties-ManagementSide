@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Metricas: View {
-    @Binding var empleado: Empleado
+    @Binding var empleado: EmpleadoD
     
     var body: some View {
         HStack(spacing: 40) {
@@ -52,5 +52,5 @@ struct Metricas: View {
         total_atendidos: 20,
         turnDate: "2025-09-23"
     )
-    return Metricas(empleado: .constant(Empleado(from: response)))
+    return Metricas(empleado: .constant(EmpleadoD(from: response)))
 }

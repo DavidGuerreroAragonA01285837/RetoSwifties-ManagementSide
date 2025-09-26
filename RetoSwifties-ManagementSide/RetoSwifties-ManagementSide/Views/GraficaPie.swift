@@ -9,8 +9,8 @@ import SwiftUI
 import Charts
 
 struct GraficaPie: View {
-    var empleados: [Empleado]
-    @Binding var empleado: Empleado
+    var empleados: [EmpleadoD]
+    @Binding var empleado: EmpleadoD
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -56,8 +56,8 @@ struct GraficaPie: View {
         turnDate: "2025-09-23"
     )
     GraficaPie(
-        empleados: [Empleado(from: response)],
-        empleado: .constant(Empleado(from: response))
+        empleados: [EmpleadoD(from: response)],
+        empleado: .constant(EmpleadoD(from: response))
     )
 }
 

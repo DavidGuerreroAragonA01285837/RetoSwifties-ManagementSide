@@ -2,8 +2,8 @@ import SwiftUI
 import Charts
 
 struct DashboardView: View {
-    @State public var empleado: Empleado = Empleado(nombre: "Cargando...", semanas: [0,1,2,3])
-    @State public var listaEmpleados: [Empleado] = []
+    @State public var empleado: EmpleadoD = EmpleadoD(nombre: "Cargando...", semanas: [0,1,2,3])
+    @State public var listaEmpleados: [EmpleadoD] = []
     
     var body: some View {
         //ScrollView {

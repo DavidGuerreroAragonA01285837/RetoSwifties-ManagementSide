@@ -16,7 +16,7 @@ class EmpleadoService: NSObject, URLSessionDelegate {
         completionHandler(.useCredential, credential)
     }
     
-    func fetchEmpleadosAgrupados(completion: @escaping ([Empleado]) -> Void) {
+    func fetchEmpleadosAgrupados(completion: @escaping ([EmpleadoD]) -> Void) {
             fetchEmpleados { responses in
                 // Agrupar por nombre
                 var agrupados: [String: [Int]] = [:]
@@ -24,13 +24,13 @@ class EmpleadoService: NSObject, URLSessionDelegate {
                     agrupados[r.nombre, default: []].append(r.total_atendidos)
                 }
 
-                let empleados = agrupados.map { Empleado(nombre: $0.key, semanas: $0.value) }
+                let empleados = agrupados.map { EmpleadoD(nombre: $0.key, semanas: $0.value) }
                 DispatchQueue.main.async {
                     completion(empleados)
                 }
             }
         }
-    func fetchEmpleados(completion: @escaping ([Empleado]) -> Void) {
+    func fetchEmpleados(completion: @escaping ([EmpleadoD]) -> Void) {
         guard let url = URL(string: "https://10.14.255.40:10206/empleados/obtener") else {
             print("URL inválida")
             return
@@ -58,7 +58,7 @@ class EmpleadoService: NSObject, URLSessionDelegate {
             do {
                 let decoder = JSONDecoder()
                 let responses = try decoder.decode([EmpleadoResponse].self, from: data)
-                let empleados = responses.map { Empleado(from: $0) }
+                let empleados = responses.map { EmpleadoD(from: $0) }
                 
                 DispatchQueue.main.async {
                     completion(empleados)
