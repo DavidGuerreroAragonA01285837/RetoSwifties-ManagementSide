@@ -7,9 +7,9 @@
 
 import Foundation
 
-class EmpleadoService: NSObject, URLSessionDelegate {
+class EmpleadoServiceD: NSObject, URLSessionDelegate {
     
-    static let shared = EmpleadoService()
+    static let shared = EmpleadoServiceD()
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         let credential = URLCredential(trust: challenge.protectionSpace.serverTrust!)

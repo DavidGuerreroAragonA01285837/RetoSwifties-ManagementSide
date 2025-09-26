@@ -38,7 +38,7 @@ struct DashboardView: View {
             )
             .padding()
             .onAppear {
-                EmpleadoService.shared.fetchEmpleadosAgrupados { empleados in
+                EmpleadoServiceD.shared.fetchEmpleadosAgrupados { empleados in
                     self.listaEmpleados = empleados
                     if let primero = empleados.first {
                         self.empleado = primero
