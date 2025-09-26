@@ -42,3 +42,15 @@ struct EmpleadoD: Identifiable, Hashable, Codable {
             self.semanas = semanas
         }
 }
+
+
+struct EmpleadoE: Codable, Hashable {
+    var nombre: String
+    var Contrasena: String
+    var Rol: String
+}
+
+struct LoginResponse: Codable {
+    let login: Bool
+    let rol: String
+}

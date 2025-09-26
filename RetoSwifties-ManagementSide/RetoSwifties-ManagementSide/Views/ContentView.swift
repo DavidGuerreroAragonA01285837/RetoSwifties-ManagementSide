@@ -87,10 +87,12 @@ struct ContentView: View {
                 .padding(.horizontal)
             }
             .navigationDestination(isPresented: $isLoggedInAdmin) {
-                HomeAdminView()
+                AdminView()
+                    .navigationBarBackButtonHidden(true)
             }
             .navigationDestination(isPresented: $isLoggedInEmpleado) {
-                HomeEmpleadoView()
+                EmployeeView()
+                    .navigationBarBackButtonHidden(true)
             }
         }
     }
